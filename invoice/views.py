@@ -1,6 +1,4 @@
-from django.shortcuts import render,redirect
-
-# Create your views here.
+from django.shortcuts import render,redirect,get_object_or_404,reverse
 from django.views import View
 from .models import LineItem,Invoice
 from .forms import LineItemFormset,InvoiceForm
@@ -63,3 +61,26 @@ def createInvoice(request):
         "form": form
     }
     return render(request,'invoice/invoice-create.html',context)
+
+def view_PDF(request, id=None):
+    invoice = get_object_or_404(Invoice,id=id)
+    lineitem = invoice.lineitem_set.all()
+
+    context = {
+        "company":{
+            "name": "Virtual Company Ltd.",
+            "address": "23th Street, Zbcxyz",
+            "phone": "+91 XXXX-XX-XXXX",
+            "email": "abc@xompany.com",
+        },
+        "invoice_id": invoice.id,
+        "invoice_total": invoice.total_amount,
+        "customer": invoice.customer,
+        "customer_email":invoice.customer_email,
+        "date": invoice.date,
+        "due_date":invoice.due_date,
+        "billing_address":invoice.billing_address,
+        "message": invoice.billing_address,
+        "lineitem":lineitem,
+    }
+    return render(request,'invoice/pdf_template.html',context)
