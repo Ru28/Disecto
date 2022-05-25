@@ -1,7 +1,11 @@
 from django.shortcuts import render,redirect,get_object_or_404,reverse
+from django.template.loader import get_template
+from django.http import HttpResponse
 from django.views import View
 from .models import LineItem,Invoice
 from .forms import LineItemFormset,InvoiceForm
+
+import pdfkit
 
 class InvoiceListView(View):
     def get(self,*args,**kwargs):
@@ -84,3 +88,14 @@ def view_PDF(request, id=None):
         "lineitem":lineitem,
     }
     return render(request,'invoice/pdf_template.html',context)
+
+def generate_PDF(request,id):
+    pdf = pdfkit.from_url(request.build_absolute_uri(reverse('invoice:invoice-detail',args=[id])),False)
+    response= HttpResponse(pdf,content_type='application/pdf')
+    response['Content-Disposition']='attachment; filename="invoice.pdf"'
+
+    return response
+
+
+def view_404(request, *args, **kwags):
+    return redirect('invoice:invoice-list')
