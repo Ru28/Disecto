@@ -22,7 +22,6 @@
                     <tbody>
                         <thead>
                             <tr>
-                                <th></th>
                                 <th>INVOICE</th>
                                 <th>CUSTOMER</th>
                                 <th>DATE</th>
@@ -35,7 +34,6 @@
                         </thead>
                         {% for invoice in invoices %}
                         <tr>
-                            <td><input class="checkbox" type="checkbox" value="{{invoice.id}}" name="invoice_id" size="1" />
                             </td>
                             <td width="1%">#{{invoice.id}}</td>
                             <td width="9%">{{invoice.customer}}</td>
